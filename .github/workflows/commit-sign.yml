@@ -99,7 +99,7 @@ jobs:
                 "mode": "100644",
                 "type": "blob",
                 "content": "$file3_content"
-              },
+              }
             ]
           }
           EOF
