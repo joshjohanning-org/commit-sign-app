@@ -79,7 +79,7 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -s -H "Authorization: token $token" -X POST \
+          tree=$(curl -H "Authorization: token $token" -X POST \
             -d '{
               "base_tree": "'"$base_tree"'",
               "tree": [
@@ -102,13 +102,13 @@ jobs:
                   "content": "'"$file3_content"'"
                 }
               ]
-            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees) || exit 1
           
           # Get the SHA of the new tree
           new_tree_sha=$(echo $tree | jq -r '.sha')
           
           # Create a new commit pointing to the new tree
-          commit=$(curl -sf -H "Authorization: token $token" -X POST \
+          commit=$(curl -s -H "Authorization: token $token" -X POST \
             -d '{
               "message": "Add multiple files",
               "tree": "'"$new_tree_sha"'",
