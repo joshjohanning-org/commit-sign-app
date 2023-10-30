@@ -59,8 +59,8 @@ jobs:
           repo_name="commit-sign-app-other-repo"
           token="${{ steps.app-token.outputs.token }}"
           # Get the contents of the files
-          file1_content=$(cat "$file1_path" | tr '\n' '\\n')
-          file2_content=$(cat "$file2_path" | tr '\n' '\\n')
+          file1_content=$(cat README.md | tr '\n' '\\n')
+          file2_content=$(cat shas.txt | tr '\n' '\\n')
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
