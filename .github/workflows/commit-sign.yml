@@ -78,13 +78,13 @@ jobs:
             "base_tree": "$base_tree",
             "tree": [
               {
-                "path": "file1.txt",
+                "path": "README.md",
                 "mode": "100644",
                 "type": "blob",
                 "content": "$file1_content"
               },
               {
-                "path": "file2.txt",
+                "path": "shas.txt",
                 "mode": "100644",
                 "type": "blob",
                 "content": "$file2_content"
