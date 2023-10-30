@@ -59,8 +59,8 @@ jobs:
           repo_name="commit-sign-app-other-repo"
           token="${{ steps.app-token.outputs.token }}"
           # Get the contents of the files
-          file1_content=$(cat README.md | tr '\n' '\\n')
-          file2_content=$(cat shas.txt | tr '\n' '\\n')
+          file1_content=$(cat README.md)
+          file2_content=$(cat shas.txt)
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
@@ -73,24 +73,26 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -s -H "Authorization: token $token" -X POST \
-            -d '{
-              "base_tree": "'"$base_tree"'",
-              "tree": [
-                {
-                  "path": "README.md",
-                  "mode": "100644",
-                  "type": "blob",
-                  "content": "'"$file1_content"'"
-                },
-                {
-                  "path": "shas.txt",
-                  "mode": "100644",
-                  "type": "blob",
-                  "content": "'"$file2_content"'"
-                }
-              ]
-            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
+          tree=$(curl -s -H "Authorization: token $token" -X POST -d @- https://api.github.com/repos/$repo_user/$repo_name/git/trees <<EOF
+          {
+            "base_tree": "$base_tree",
+            "tree": [
+              {
+                "path": "file1.txt",
+                "mode": "100644",
+                "type": "blob",
+                "content": "$file1_content"
+              },
+              {
+                "path": "file2.txt",
+                "mode": "100644",
+                "type": "blob",
+                "content": "$file2_content"
+              }
+            ]
+          }
+          EOF
+          )
           
           # Get the SHA of the new tree
           new_tree_sha=$(echo $tree | jq -r '.sha')
