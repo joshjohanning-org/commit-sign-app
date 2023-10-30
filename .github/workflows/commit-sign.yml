@@ -52,6 +52,7 @@ jobs:
       - name: push to repo
         run: | 
           #!/bin/bash
+          set -euxo pipefail
           
           # Variables
           repo_user="${{ github.repository_owner }}"
