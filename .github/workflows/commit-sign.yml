@@ -6,7 +6,7 @@ on:
 permissions: read-all
 
 jobs:
-  Create-Repo:
+  app-sign-commit:
     runs-on: ubuntu-latest
 
     steps:
@@ -93,6 +93,12 @@ jobs:
                   "mode": "100644",
                   "type": "blob",
                   "content": "'"$file2_content"'"
+                },
+                {
+                  "path": "dependabot.yml",
+                  "mode": "100644",
+                  "type": "blob",
+                  "content": "'"$file3_content"'"
                 }
               ]
             }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
