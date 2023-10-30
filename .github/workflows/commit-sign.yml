@@ -79,7 +79,7 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -sf -H "Authorization: token $token" -X POST \
+          tree=$(curl -s -H "Authorization: token $token" -X POST \
             -d '{
               "base_tree": "'"$base_tree"'",
               "tree": [
@@ -108,7 +108,7 @@ jobs:
           new_tree_sha=$(echo $tree | jq -r '.sha')
           
           # Create a new commit pointing to the new tree
-          commit=$(curl -s -H "Authorization: token $token" -X POST \
+          commit=$(curl -sf -H "Authorization: token $token" -X POST \
             -d '{
               "message": "Add multiple files",
               "tree": "'"$new_tree_sha"'",
