@@ -37,6 +37,7 @@ jobs:
         run: |
           cd other-repo
           echo "${{ secrets.APP_PRIVATE_KEY }}" > ${{ github.workspace }}/key.pem
+          cat ${{ github.workspace }}/key.pem
           git config --global user.signingkey ${{ github.workspace }}/key.pem
           git config --global gpg.format ssh
           git config --global user.name 'josh-terraform-app[bot]'
