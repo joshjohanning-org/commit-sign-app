@@ -65,7 +65,7 @@ jobs:
           # Get the contents of the files
           file1_content=$(awk '{printf "%s\\n", $0}' "$file1_path")
           file2_content=$(awk '{printf "%s\\n", $0}' "$file2_path")
-          file3_content=$(yq e -j "$file3_path" | jq -c .)
+          file3_content=$(yq e -o=json "$file3_path" | jq -c .)
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
@@ -95,7 +95,7 @@ jobs:
                 "content": "$file2_content"
               },
               {
-                "path": ".github/dependabot.yml",
+                "path": "dependabot.yml",
                 "mode": "100644",
                 "type": "blob",
                 "content": "$file3_content"
