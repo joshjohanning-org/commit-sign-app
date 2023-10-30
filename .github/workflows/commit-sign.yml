@@ -93,12 +93,6 @@ jobs:
                 "mode": "100644",
                 "type": "blob",
                 "content": "$file2_content"
-              },
-              {
-                "path": "dependabot.yml",
-                "mode": "100644",
-                "type": "blob",
-                "content": "$file3_content"
               }
             ]
           }
