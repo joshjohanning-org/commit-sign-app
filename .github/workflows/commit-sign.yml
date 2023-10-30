@@ -86,7 +86,7 @@ jobs:
                 "path": "dependabot.yml",
                 "mode": "100644",
                 "type": "blob",
-                "content": "$file3_content"
+                "content": $file3_content
               }
             ]
           }
