@@ -102,7 +102,7 @@ jobs:
                   "content": "'"$file3_content"'"
                 }
               ]
-            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees || exit 1)
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees) || exit 1
           
           # Get the SHA of the new tree
           new_tree_sha=$(echo $tree | jq -r '.sha')
