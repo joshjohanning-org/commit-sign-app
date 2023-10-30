@@ -23,25 +23,21 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
+      - run: | 
+          echo "" >> README.md && echo ${{ github.sha }} >> README.md
+          echo "${{ github.sha }}" >> shas.txt
+
+      # # UNSIGNED COMMIT # #
       # - uses: actions/checkout@v4
       #   with:
       #     token: ${{ steps.app-token.outputs.token }}
       #     repository: joshjohanning-org/commit-sign-app-other-repo
       #     path: other-repo
-
-      - run: | 
-          echo "" >> README.md && echo ${{ github.sha }} >> README.md
-          echo "${{ github.sha }}" >> shas.txt
-          
-      
       # - name: push to git repo
       #   env:
       #     GH_TOKEN: ${{ steps.app-token.outputs.token }}
       #   run: |
       #     cd other-repo
-      #     echo "${{ secrets.APP_PRIVATE_KEY }}" > ${{ github.workspace }}/key.pem
-      #     cat ${{ github.workspace }}/key.pem
-      #     git config --global user.signingkey ${{ github.workspace }}/key.pem
       #     git config --global gpg.format ssh
       #     git config --global user.name 'josh-terraform-app[bot]'
       #     git config --global user.email '145150012+josh-terraform-app[bot]@users.noreply.github.com'
@@ -49,7 +45,7 @@ jobs:
       #     git commit -m "updating readme" -S
       #     git push
 
-      - name: push to repo
+      - name: push to repo with signed commit
         run: | 
           #!/bin/bash
           set -euxo pipefail
