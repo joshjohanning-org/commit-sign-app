@@ -78,26 +78,24 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -s -H "Authorization: token $token" -X POST -d @- https://api.github.com/repos/$repo_user/$repo_name/git/trees <<EOF
-          {
-            "base_tree": "$base_tree",
-            "tree": [
-              {
-                "path": "README.md",
-                "mode": "100644",
-                "type": "blob",
-                "content": "$file1_content"
-              },
-              {
-                "path": "shas.txt",
-                "mode": "100644",
-                "type": "blob",
-                "content": "$file2_content"
-              }
-            ]
-          }
-          EOF
-          )
+          tree=$(curl -s -H "Authorization: token $token" -X POST \
+            -d '{
+              "base_tree": "'"$base_tree"'",
+              "tree": [
+                {
+                  "path": "file1.txt",
+                  "mode": "100644",
+                  "type": "blob",
+                  "content": "'"$file1_content"'",
+                },
+                {
+                  "path": "file2.txt",
+                  "mode": "100644",
+                  "type": "blob",
+                  "content": "'"$file2_content"'",
+                }
+              ]
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
           
           # Get the SHA of the new tree
           new_tree_sha=$(echo $tree | jq -r '.sha')
