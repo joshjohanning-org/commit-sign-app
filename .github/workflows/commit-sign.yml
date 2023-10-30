@@ -78,13 +78,13 @@ jobs:
                   "path": "README.md",
                   "mode": "100644",
                   "type": "blob",
-                  "content": '\"$(base64 -i README.md)\"'
+                  "content": '\"$(base64 -w0 -i README.md)\"'
                 },
                 {
                   "path": "shas.txt",
                   "mode": "100644",
                   "type": "blob",
-                  "content": '\"$(base64 -i shas.txt)\"'
+                  "content": '\"$(base64 -w0 -i shas.txt)\"'
                 }
               ]
             }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
