@@ -36,6 +36,9 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           cd other-repo
+          echo "${{ secrets.APP_PRIVATE_KEY }}" > ../key.pem
+          git config --global user.signingkey ../key.pem
+          git config --global gpg.format ssh
           git config --global user.name 'josh-terraform-app[bot]'
           git config --global user.email '145150012+josh-terraform-app[bot]@users.noreply.github.com'
           git add .
