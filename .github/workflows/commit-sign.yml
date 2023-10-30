@@ -58,9 +58,12 @@ jobs:
           repo_user="${{ github.repository_owner }}"
           repo_name="commit-sign-app-other-repo"
           token="${{ steps.app-token.outputs.token }}"
+          file1_path="README.md"
+          file2_path="shas.txt"
+          
           # Get the contents of the files
-          file1_content=$(cat README.md | tr '\n' '\\n')
-          file2_content=$(cat shas.txt | tr '\n' '\\n')
+          file1_content=$(awk '{printf "%s\\n", $0}' "$file1_path")
+          file2_content=$(awk '{printf "%s\\n", $0}' "$file2_path")
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
