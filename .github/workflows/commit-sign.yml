@@ -26,6 +26,8 @@ jobs:
       - run: echo "" >> README.md && echo ${{ github.sha }} >> README.md
       
       - name: push to git repo
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           git config --global user.name 'josh-terraform-app[bot]'
           git config --global user.email '145150012+josh-terraform-app[bot]@users.noreply.github.com'
