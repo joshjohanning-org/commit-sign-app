@@ -83,19 +83,19 @@ jobs:
               "base_tree": "'"$base_tree"'",
               "tree": [
                 {
-                  "path": "README.md",
+                  "path": "'"$file1_path"'",
                   "mode": "100644",
                   "type": "blob",
                   "content": "'"$file1_content"'"
                 },
                 {
-                  "path": "shas.txt",
+                  "path": "'"$file2_path"'",
                   "mode": "100644",
                   "type": "blob",
                   "content": "'"$file2_content"'"
                 },
                 {
-                  "path": "dependabot.yml",
+                  "path": "'"$file3_path"'",
                   "mode": "100644",
                   "type": "blob",
                   "content": "'"$file3_content"'"
