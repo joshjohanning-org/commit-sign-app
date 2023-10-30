@@ -58,6 +58,9 @@ jobs:
           repo_user="${{ github.repository_owner }}"
           repo_name="commit-sign-app-other-repo"
           token="${{ steps.app-token.outputs.token }}"
+          # Get the contents of the files
+          file1_content=$(cat README.md)
+          file2_content=$(cat shas.txt)
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
@@ -78,15 +81,13 @@ jobs:
                   "path": "README.md",
                   "mode": "100644",
                   "type": "blob",
-                  "content": '\"$(base64 -w0 -i README.md)\"',
-                  "encoding": "base64"
+                  "content": "'"$file1_content"'"
                 },
                 {
                   "path": "shas.txt",
                   "mode": "100644",
                   "type": "blob",
-                  "content": '\"$(base64 -w0 -i shas.txt)\"',
-                  "encoding": "base64"
+                  "content": "'"$file2_content"'"
                 }
               ]
             }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
