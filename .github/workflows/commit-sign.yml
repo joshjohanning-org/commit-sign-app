@@ -79,7 +79,7 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -s -H "Authorization: token $token" -X POST \
+          tree=$(curl -sf -H "Authorization: token $token" -X POST \
             -d '{
               "base_tree": "'"$base_tree"'",
               "tree": [
@@ -102,7 +102,7 @@ jobs:
                   "content": "'"$file3_content"'"
                 }
               ]
-            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees) || exit 1
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
           
           # Get the SHA of the new tree
           new_tree_sha=$(echo $tree | jq -r '.sha')
