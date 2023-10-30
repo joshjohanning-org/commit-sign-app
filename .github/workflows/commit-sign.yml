@@ -23,25 +23,87 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          repository: joshjohanning-org/commit-sign-app-other-repo
-          path: other-repo
+      # - uses: actions/checkout@v4
+      #   with:
+      #     token: ${{ steps.app-token.outputs.token }}
+      #     repository: joshjohanning-org/commit-sign-app-other-repo
+      #     path: other-repo
 
-      - run: cd other-repo && echo "" >> README.md && echo ${{ github.sha }} >> README.md
+      - run: | 
+          echo "" >> README.md && echo ${{ github.sha }} >> README.md
+          echo "${{ github.sha }}" >> shas.txt
+          
       
-      - name: push to git repo
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          cd other-repo
-          echo "${{ secrets.APP_PRIVATE_KEY }}" > ${{ github.workspace }}/key.pem
-          cat ${{ github.workspace }}/key.pem
-          git config --global user.signingkey ${{ github.workspace }}/key.pem
-          git config --global gpg.format ssh
-          git config --global user.name 'josh-terraform-app[bot]'
-          git config --global user.email '145150012+josh-terraform-app[bot]@users.noreply.github.com'
-          git add .
-          git commit -m "updating readme" -S
-          git push
+      # - name: push to git repo
+      #   env:
+      #     GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      #   run: |
+      #     cd other-repo
+      #     echo "${{ secrets.APP_PRIVATE_KEY }}" > ${{ github.workspace }}/key.pem
+      #     cat ${{ github.workspace }}/key.pem
+      #     git config --global user.signingkey ${{ github.workspace }}/key.pem
+      #     git config --global gpg.format ssh
+      #     git config --global user.name 'josh-terraform-app[bot]'
+      #     git config --global user.email '145150012+josh-terraform-app[bot]@users.noreply.github.com'
+      #     git add .
+      #     git commit -m "updating readme" -S
+      #     git push
+
+      - name: push to repo
+        run: | 
+          #!/bin/bash
+          
+          # Variables
+          repo_user="${{ github.repository_owner }}"
+          repo_name="commit-sign-app-other-repo"
+          token="${{ steps.app-token.outputs.token }}"
+          
+          # Get the latest commit
+          latest_commit=$(curl -s -H "Authorization: token $token" \
+            https://api.github.com/repos/$repo_user/$repo_name/git/refs/heads/main \
+            | jq -r '.object.sha')
+          
+          # Get the tree of the latest commit
+          base_tree=$(curl -s -H "Authorization: token $token" \
+            https://api.github.com/repos/$repo_user/$repo_name/git/commits/$latest_commit \
+            | jq -r '.tree.sha')
+          
+          # Create a new tree with the new files
+          tree=$(curl -s -H "Authorization: token $token" -X POST \
+            -d '{
+              "base_tree": "'"$base_tree"'",
+              "tree": [
+                {
+                  "path": "README.md",
+                  "mode": "100644",
+                  "type": "blob",
+                  "content": "$(base64 -i README.md)"
+                },
+                {
+                  "path": "shas.txt",
+                  "mode": "100644",
+                  "type": "blob",
+                  "content": "$(base64 -i shas.txt)"
+                }
+              ]
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
+          
+          # Get the SHA of the new tree
+          new_tree_sha=$(echo $tree | jq -r '.sha')
+          
+          # Create a new commit pointing to the new tree
+          commit=$(curl -s -H "Authorization: token $token" -X POST \
+            -d '{
+              "message": "Add multiple files",
+              "tree": "'"$new_tree_sha"'",
+              "parents": ["'"$latest_commit"'"]
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/commits)
+          
+          # Get the SHA of the new commit
+          new_commit_sha=$(echo $commit | jq -r '.sha')
+          
+          # Update the reference of the branch to point to the new commit
+          curl -s -H "Authorization: token $token" -X PATCH \
+            -d '{
+              "sha": "'"$new_commit_sha"'"
+            }' https://api.github.com/repos/$repo_user/$repo_name/git/refs/heads/main
