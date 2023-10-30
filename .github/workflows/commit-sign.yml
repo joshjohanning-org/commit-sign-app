@@ -21,7 +21,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - run: echo ${{ github.sha }} >> README.md
+      - run: echo "" >> README.md && echo ${{ github.sha }} >> README.md
       
       - name: push to git repo
         run: |
