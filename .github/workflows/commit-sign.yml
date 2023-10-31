@@ -85,19 +85,19 @@ jobs:
                   "path": "'"$file1_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'$file1_content'"
+                  "content": '"$file1_content"'
                 },
                 {
                   "path": "'"$file2_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'$file2_content'"
+                  "content": '"$file2_content"'
                 },
                 {
                   "path": "'"$file3_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'$file3_content'"
+                  "content": '"$file3_content"'
                 }
               ]
             }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
