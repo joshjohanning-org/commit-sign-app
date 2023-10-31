@@ -101,7 +101,7 @@ jobs:
               }
             ]
           }')
-          tree=$(curl -s -H "Authorization: token token" -X POST \
+          tree=$(curl -s -H "Authorization: token $token" -X POST \
             -d "$json" https://api.github.com/repos/$repo_user/$repo_name/git/trees)
           
           # Get the SHA of the new tree
