@@ -59,9 +59,12 @@ jobs:
           file3_path=".github/dependabot.yml"
           
           # Get the contents of the files; escape new lines and quotes
-          file1_content=$(awk '{printf "%s\\n", $0}' "$file1_path" | sed 's/"/\\"/g')
-          file2_content=$(awk '{printf "%s\\n", $0}' "$file2_path" | sed 's/"/\\"/g')
-          file3_content=$(awk '{printf "%s\\n", $0}' "$file3_path" | sed 's/"/\\"/g')
+          #file1_content=$(awk '{printf "%s\\n", $0}' "$file1_path" | sed 's/"/\\"/g')
+          #file2_content=$(awk '{printf "%s\\n", $0}' "$file2_path" | sed 's/"/\\"/g')
+          #file3_content=$(awk '{printf "%s\\n", $0}' "$file3_path" | sed 's/"/\\"/g')
+          file1_content=$(jq -Rs '.' $file1_path)
+          file2_content=$(jq -Rs '.' $file2_path)
+          file3_content=$(jq -Rs '.' $file3_path)
           
           # Get the latest commit
           latest_commit=$(curl -s -H "Authorization: token $token" \
