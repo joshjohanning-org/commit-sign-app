@@ -77,7 +77,7 @@ jobs:
             | jq -r '.tree.sha')
           
           # Create a new tree with the new files
-          tree=$(curl -H "Authorization: token $token" -X POST \
+          tree=$(curl -s -H "Authorization: token $token" -X POST \
             -d '{
               "base_tree": "'"$base_tree"'",
               "tree": [
@@ -85,19 +85,19 @@ jobs:
                   "path": "'"$file1_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'"$file1_content"'"
+                  "content": "'$file1_content'"
                 },
                 {
                   "path": "'"$file2_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'"$file2_content"'"
+                  "content": "'$file2_content'"
                 },
                 {
                   "path": "'"$file3_path"'",
                   "mode": "100644",
                   "type": "blob",
-                  "content": "'"$file3_content"'"
+                  "content": "'$file3_content'"
                 }
               ]
             }' https://api.github.com/repos/$repo_user/$repo_name/git/trees)
