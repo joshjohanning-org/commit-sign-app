@@ -72,9 +72,40 @@ jobs:
           base_tree=$(curl -s -H "Authorization: token $token" \
             https://api.github.com/repos/$repo_user/$repo_name/git/commits/$latest_commit \
             | jq -r '.tree.sha')
+
+          #
+          json=$(jq --arg base_tree "$base_tree" \
+          --arg file1_path "$file1_path" --rawfile file1_content "$file1_path" \
+          --arg file2_path "$file2_path" --rawfile file2_content "$file2_path" \
+          --arg file3_path "$file3_path" --rawfile file3_content "$file3_path" \
+          '{
+            "base_tree": $base_tree,
+            "tree": [
+              {
+                "path": $file1_path,
+                "mode": "100644",
+                "type": "blob",
+                "content": $file1_content
+              },
+              {
+                "path": $file2_path,
+                "mode": "100644",
+                "type": "blob",
+                "content": $file2_content
+              },
+              {
+                "path": $file3_path,
+                "mode": "100644",
+                "type": "blob",
+                "content": $file3_content
+              }
+            ]
+          }')
+          tree=$(curl -s -H "Authorization: token token" -X POST \
+            -d "$json" https://api.github.com/repos/$repo_user/$repo_name/git/trees)
           
           # Create a new tree with the new files
-          tree=$(curl -s -H "Authorization: token $token" -X POST \
+          tree=$(curl -s -H "Authorization: token token" -X POST \
             -d '{
               "base_tree": "'"$base_tree"'",
               "tree": [
