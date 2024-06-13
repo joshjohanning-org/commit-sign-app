@@ -48,7 +48,35 @@ jobs:
       #     git push
       #
 
-      - name: push to repo with signed commit
+      - name: push to repo with signed commit single file
+        run: | 
+          #!/bin/bash
+          set -euxo pipefail
+          
+          # Variables
+          repo_user="${{ github.repository_owner }}"
+          repo_name="commit-sign-app-other-repo"
+          token="${{ steps.app-token.outputs.token }}"
+
+          FILE_PATH="single-file.txt"
+
+          # Step 1: Encode new content in Base64
+          NEW_CONTENT="${{ github.sha }}"
+          ENCODED_CONTENT=$(echo -n "${NEW_CONTENT}" | base64)
+          
+          # Step 2: Get the SHA of the existing file
+          SHA=$(curl -H "Authorization: token YOUR_GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               "https://api.github.com/repos/OWNER/REPO/contents/${FILE_PATH}" | jq -r '.sha')
+          
+          # Step 3: Update the file
+          curl -X PUT -H "Authorization: token YOUR_GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d "{\"message\": \"update single file\", \"committer\": {\"name\": \"josh-terraform-app[bot]\", \"email\": \"145150012+josh-terraform-app[bot]@users.noreply.github.com\"}, \"content\": \"${ENCODED_CONTENT}\", \"sha\": \"${SHA}\"}" \
+               "https://api.github.com/repos/$repo_user/$repo_name/git/contents/${FILE_PATH}"
+          
+
+      - name: push to repo with signed commit multiple files
         run: | 
           #!/bin/bash
           set -euxo pipefail
