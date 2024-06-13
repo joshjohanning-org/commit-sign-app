@@ -73,7 +73,7 @@ jobs:
           curl -X PUT -H "Authorization: token $token" \
                -H "Accept: application/vnd.github.v3+json" \
                -d "{\"message\": \"update single file\", \"committer\": {\"name\": \"josh-terraform-app[bot]\", \"email\": \"145150012+josh-terraform-app[bot]@users.noreply.github.com\"}, \"content\": \"${ENCODED_CONTENT}\", \"sha\": \"${SHA}\"}" \
-               "https://api.github.com/repos/$repo_user/$repo_name/git/contents/${FILE_PATH}"
+               "https://api.github.com/repos/$repo_user/$repo_name/contents/${FILE_PATH}"
           
 
       - name: push to repo with signed commit multiple files
