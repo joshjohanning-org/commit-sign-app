@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Write GitHub context to log
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
@@ -28,7 +28,7 @@ jobs:
           echo "${{ github.sha }}" >> shas.txt
 
       # # UNSIGNED COMMIT # #
-      # - uses: actions/checkout@v4
+      # - uses: actions/checkout@v5
       #   with:
       #     token: ${{ steps.app-token.outputs.token }}
       #     repository: joshjohanning-org/commit-sign-app-other-repo
